@@ -4,7 +4,6 @@ import (
 	_ "embed"
 	"fmt"
 	"sort"
-	"strings"
 
 	sh "github.com/leonhfr/aoc/shared"
 )
@@ -103,9 +102,5 @@ func riskLevel(hm sh.Matrix, coords []sh.Coordinates) (risk int) {
 }
 
 func init() {
-	lines := sh.Lines(input)
-	heightmap = sh.NewMatrix(len(lines), len(lines[0]))
-	for y, line := range lines {
-		heightmap[y] = sh.ToInts(strings.Split(line, ""))
-	}
+	heightmap = sh.IntMatrix(input)
 }
