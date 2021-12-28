@@ -9,6 +9,11 @@ func Lines(str string) []string {
 	return strings.Split(strings.TrimRight(str, "\n"), "\n")
 }
 
+func IntList(str string) []int {
+	lines := Lines(str)
+	return ToInts(strings.Split(lines[0], ","))
+}
+
 func ToInt(str string) int {
 	i, err := strconv.Atoi(str)
 	if err != nil {
