@@ -30,6 +30,11 @@ func ToInts(sli []string) []int {
 	return ints
 }
 
+func BinToInt(binary string) int {
+	i, _ := strconv.ParseInt(binary, 2, 64)
+	return int(i)
+}
+
 func Abs(a int) int {
 	if a < 0 {
 		return -a
