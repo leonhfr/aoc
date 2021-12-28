@@ -29,3 +29,17 @@ func ToInts(sli []string) []int {
 	}
 	return ints
 }
+
+func Abs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
+}
+
+func Gcd(a, b int) int {
+	for b != 0 {
+		a, b = b, a%b
+	}
+	return a
+}
