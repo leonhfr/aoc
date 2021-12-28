@@ -1,0 +1,131 @@
+#!/bin/bash
+### gaoc - git repo management for aoc
+###
+### Usage:
+###   newyear [options] <subcommand>
+###
+### Example:
+###   gaoc inputs
+###   gaoc year 2021
+###
+### Options:
+###   -h,--help: show this message
+###
+### Subcommands:
+
+set -e
+
+# config
+REPO="git@github.com-leonhfr:leonhfr/aoc.git"
+SESSION="$HOME/.adventofcode.session"
+DAYS=(
+  "01" "02" "03" "04" "05"
+  "06" "07" "08" "09" "10"
+  "11" "12" "13" "14" "15"
+  "16" "17" "18" "19" "20"
+  "21" "22" "23" "24" "25"
+)
+
+# helpers
+p_error() {
+  printf "$(tput setaf 1)x %s$(tput sgr0)\n" "$@"
+}
+
+p_success() {
+  printf "$(tput setaf 64)✓ %s$(tput sgr0)\n" "$@"
+}
+
+type_exists() {
+  if [ $(type -P $1) ]; then
+    return 0
+  fi
+  return 1
+}
+
+only_digits() {
+  if [[ $1 =~ ^[0-9]+$ ]]; then
+    return 0
+  fi
+  return 1
+}
+
+aoc_checks() {
+  if ! type_exists "aoc"; then
+    p_error "Please install github.com/scarvalhojr/aoc-cli first"
+    exit 1
+  fi
+  if ! [ $(git rev-parse --show-toplevel) == $(pwd) ]; then
+    p_error "Please make sure you are in the aoc root directory"
+    exit 1
+  fi
+  if ! [ $(git config remote.origin.url) == $REPO ]; then
+    p_error "Please make sure you are in the aoc repository"
+    exit 1
+  fi
+}
+
+### help: show this message
+sub_help() {
+  sed -rn 's/^### ?//p' "$0"
+}
+
+### inputs: download inputs for all challenges
+sub_inputs() {
+  aoc_checks
+  for YEAR in *; do
+    if [ -d "$YEAR" ] && only_digits $YEAR; then
+      (aoc_year $YEAR)
+    fi
+  done
+}
+
+aoc_year() {
+  YEAR=$1
+  cd $YEAR
+  for DAY in *; do
+    if [ -d "$DAY" ] && only_digits $DAY; then
+      (aoc_day $YEAR $DAY)
+    fi
+  done
+}
+
+aoc_day() {
+  YEAR=$1
+  DAY=$2
+  cd $DAY
+  if ! [ -f "input" ]; then
+    aoc -y $YEAR -d $DAY d
+  fi
+}
+
+### year: create scaffolding for new year
+sub_year() {
+  aoc_checks
+  mkdir $1
+  cd $1
+  for DAY in ${DAYS[@]}; do
+    mkdir $DAY
+    cp -n ../template/* ./$DAY/
+  done
+  p_success "Created scaffolding for year $1"
+}
+
+# main entry point
+SUBCOMMAND=$1
+case $SUBCOMMAND in
+  "" | "-h" | "--help")
+    sub_help
+    ;;
+  *)
+    shift
+    sub_${SUBCOMMAND} $@
+    if [ $? = 127 ]; then
+      echo "Error: '$SUBCOMMAND' is not a known subcommand." >&2
+      echo "       Run 'uz help' for a list of known subcommands." >&2
+      exit 1
+    fi
+    ;;
+esac
+
+###
+### Requires: github.com/scarvalhojr/aoc-cli
