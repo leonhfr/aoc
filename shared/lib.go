@@ -1,6 +1,7 @@
 package shared
 
 import (
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -67,4 +68,25 @@ func Min(vars ...int) int {
 		}
 	}
 	return min
+}
+
+func Mean(vars []int) int {
+	sum := 0
+	for _, v := range vars {
+		sum += v
+	}
+	return sum / len(vars)
+}
+
+func Median(vars []int) int {
+	l := len(vars)
+	sort.Ints(vars)
+	if l%2 == 0 {
+		return (vars[l/2-1] + vars[l/2]) / 2
+	}
+	return (vars[l/2])
+}
+
+func TriangularNumber(n int) int {
+	return n * (n + 1) / 2
 }
