@@ -4,13 +4,13 @@ import (
 	_ "embed"
 	"fmt"
 
-	sh "github.com/leonhfr/aoc/shared"
+	mat "github.com/leonhfr/aoc/shared/matrix"
 )
 
 //go:embed input
 var input string
 
-var octopuses sh.Matrix
+var octopuses mat.Matrix
 
 func main() {
 	fmt.Printf("Part 1: %v\n", part1())
@@ -36,10 +36,10 @@ func part2() (s int) {
 }
 
 func init() {
-	octopuses = sh.IntMatrix(input)
+	octopuses = mat.IntMatrix(input)
 }
 
-func step(m sh.Matrix) (flashes int) {
+func step(m mat.Matrix) (flashes int) {
 	increment(m)
 	for i := flash(m); i > 0; i = flash(m) {
 		flashes += i
@@ -48,7 +48,7 @@ func step(m sh.Matrix) (flashes int) {
 	return
 }
 
-func increment(m sh.Matrix) {
+func increment(m mat.Matrix) {
 	for i := 0; i < m.M(); i++ {
 		for j := 0; j < m.N(); j++ {
 			m[i][j]++
@@ -56,7 +56,7 @@ func increment(m sh.Matrix) {
 	}
 }
 
-func flash(m sh.Matrix) (flahes int) {
+func flash(m mat.Matrix) (flahes int) {
 	for i := 0; i < m.M(); i++ {
 		for j := 0; j < m.N(); j++ {
 			if m[i][j] > 9 {
@@ -69,7 +69,7 @@ func flash(m sh.Matrix) (flahes int) {
 	return
 }
 
-func spread(m sh.Matrix, i, j int) {
+func spread(m mat.Matrix, i, j int) {
 	vectors := []struct{ i, j int }{
 		{1, 0},
 		{1, 1},
@@ -91,7 +91,7 @@ func spread(m sh.Matrix, i, j int) {
 	}
 }
 
-func reset(m sh.Matrix) {
+func reset(m mat.Matrix) {
 	for i := 0; i < m.M(); i++ {
 		for j := 0; j < m.N(); j++ {
 			if m[i][j] == -1 {
@@ -101,7 +101,7 @@ func reset(m sh.Matrix) {
 	}
 }
 
-func synchronized(m sh.Matrix) bool {
+func synchronized(m mat.Matrix) bool {
 	for i := 0; i < m.M(); i++ {
 		for j := 0; j < m.N(); j++ {
 			if m[i][j] != 0 {

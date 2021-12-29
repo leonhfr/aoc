@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"sort"
 
-	sh "github.com/leonhfr/aoc/shared"
+	mat "github.com/leonhfr/aoc/shared/matrix"
 )
 
 //go:embed input
 var input string
 
-var heightmap sh.Matrix
+var heightmap mat.Matrix
 
 func main() {
 	fmt.Printf("Part 1: %v\n", part1())
@@ -34,7 +34,7 @@ func part2() int {
 	return sizes[0] * sizes[1] * sizes[2]
 }
 
-func lowestPoints(hm sh.Matrix) (coords []sh.Coordinates) {
+func lowestPoints(hm mat.Matrix) (coords []mat.Coordinates) {
 	for i := 0; i < hm.M(); i++ {
 		for j := 0; j < hm.N(); j++ {
 			v := hm[i][j]
@@ -43,24 +43,24 @@ func lowestPoints(hm sh.Matrix) (coords []sh.Coordinates) {
 			left := j == 0 || v < hm.Get(i, j-1)
 			right := j == hm.N()-1 || v < hm.Get(i, j+1)
 			if up && down && left && right {
-				coords = append(coords, sh.Coordinates{I: i, J: j})
+				coords = append(coords, mat.Coordinates{I: i, J: j})
 			}
 		}
 	}
 	return
 }
 
-type basin []sh.Coordinates
+type basin []mat.Coordinates
 
-func getBasins(hm sh.Matrix, lp []sh.Coordinates) (basins []basin) {
+func getBasins(hm mat.Matrix, lp []mat.Coordinates) (basins []basin) {
 	for _, p := range lp {
 		basins = append(basins, getBasin(hm, p))
 	}
 	return
 }
 
-func getBasin(hm sh.Matrix, lp sh.Coordinates) (b basin) {
-	queue := []sh.Coordinates{lp}
+func getBasin(hm mat.Matrix, lp mat.Coordinates) (b basin) {
+	queue := []mat.Coordinates{lp}
 	for len(queue) > 0 {
 		c := queue[0]
 		queue = queue[1:]
@@ -70,7 +70,7 @@ func getBasin(hm sh.Matrix, lp sh.Coordinates) (b basin) {
 		b = append(b, c)
 
 		// Neighbors
-		possibles := []sh.Coordinates{
+		possibles := []mat.Coordinates{
 			{I: c.I - 1, J: c.J},
 			{I: c.I + 1, J: c.J},
 			{I: c.I, J: c.J - 1},
@@ -85,7 +85,7 @@ func getBasin(hm sh.Matrix, lp sh.Coordinates) (b basin) {
 	return
 }
 
-func (b basin) contains(p sh.Coordinates) bool {
+func (b basin) contains(p mat.Coordinates) bool {
 	for _, v := range b {
 		if v.I == p.I && v.J == p.J {
 			return true
@@ -94,7 +94,7 @@ func (b basin) contains(p sh.Coordinates) bool {
 	return false
 }
 
-func riskLevel(hm sh.Matrix, coords []sh.Coordinates) (risk int) {
+func riskLevel(hm mat.Matrix, coords []mat.Coordinates) (risk int) {
 	for _, c := range coords {
 		risk += hm.Get(c.I, c.J) + 1
 	}
@@ -102,5 +102,5 @@ func riskLevel(hm sh.Matrix, coords []sh.Coordinates) (risk int) {
 }
 
 func init() {
-	heightmap = sh.IntMatrix(input)
+	heightmap = mat.IntMatrix(input)
 }
