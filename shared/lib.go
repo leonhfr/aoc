@@ -90,3 +90,11 @@ func Median(vars []int) int {
 func TriangularNumber(n int) int {
 	return n * (n + 1) / 2
 }
+
+func IntDict(ints []int) map[int]int {
+	m := make(map[int]int)
+	for _, v := range ints {
+		m[v]++
+	}
+	return m
+}
