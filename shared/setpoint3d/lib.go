@@ -1,14 +1,13 @@
-package setpoint
+package setpoint3d
 
 import (
 	"math"
-	"strings"
 
 	sh "github.com/leonhfr/aoc/shared"
 )
 
 type Point struct {
-	X, Y int
+	X, Y, Z int
 }
 
 type SetPoint struct {
@@ -29,7 +28,8 @@ func (sp *SetPoint) Add(p Point) {
 
 func (sp *SetPoint) Del(p Point) {
 	delete(sp.points, p)
-	sp.pmin, sp.pmax = Point{math.MaxInt, math.MaxInt}, Point{math.MinInt, math.MinInt}
+	sp.pmin = Point{math.MinInt, math.MinInt, math.MaxInt}
+	sp.pmax = Point{math.MinInt, math.MinInt, math.MaxInt}
 	for p := range sp.points {
 		sp.boundaries(p)
 	}
@@ -59,24 +59,38 @@ func (sp *SetPoint) Points() []Point {
 func (sp *SetPoint) boundaries(p Point) {
 	sp.pmin.X = sh.Min(sp.pmin.X, p.X)
 	sp.pmin.Y = sh.Min(sp.pmin.Y, p.Y)
+	sp.pmin.Z = sh.Min(sp.pmin.Z, p.Z)
 	sp.pmax.X = sh.Max(sp.pmax.X, p.X)
 	sp.pmax.Y = sh.Max(sp.pmax.Y, p.Y)
+	sp.pmax.Z = sh.Min(sp.pmax.Z, p.Z)
 }
 
-func (sp *SetPoint) String() string {
-	m := sh.Abs(sp.pmax.Y-sp.pmin.Y) + 1
-	n := sh.Abs(sp.pmax.X-sp.pmin.X) + 1
-	matrix := make([]string, m)
-	for y := sp.pmin.Y; y <= sp.pmax.Y; y++ {
-		row := make([]string, n)
-		for x := sp.pmin.X; x <= sp.pmax.X; x++ {
-			if _, ok := sp.points[Point{x, y}]; ok {
-				row[x-sp.pmin.X] = "#"
-			} else {
-				row[x-sp.pmin.X] = "."
-			}
+func (set1 *SetPoint) Intersect(set2 *SetPoint) *SetPoint {
+	intersection := New()
+	for _, p1 := range set1.Points() {
+		if set2.Has(p1) {
+			intersection.Add(p1)
 		}
-		matrix[y-sp.pmin.Y] = strings.Join(row, "")
 	}
-	return strings.Join(matrix, "\n")
+	return intersection
+}
+
+func ManhattanDistance(p1, p2 Point) int {
+	return sh.Abs(p1.X-p2.X) + sh.Abs(p1.Y-p2.Y) + sh.Abs(p1.Z-p2.Z)
+}
+
+func AddPts(p1, p2 Point) Point {
+	return Point{
+		X: p1.X + p2.X,
+		Y: p1.Y + p2.Y,
+		Z: p1.Z + p2.Z,
+	}
+}
+
+func SubtractPts(p1, p2 Point) Point {
+	return Point{
+		X: p1.X - p2.X,
+		Y: p1.Y - p2.Y,
+		Z: p1.Z - p2.Z,
+	}
 }
