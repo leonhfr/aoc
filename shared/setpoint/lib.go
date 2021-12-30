@@ -80,3 +80,15 @@ func (sp *SetPoint) String() string {
 	}
 	return strings.Join(matrix, "\n")
 }
+
+func ParseSharp(str string) *SetPoint {
+	sp := New()
+	for y, line := range sh.Lines(str) {
+		for x, r := range line {
+			if r == '#' {
+				sp.Add(Point{x, y})
+			}
+		}
+	}
+	return sp
+}
