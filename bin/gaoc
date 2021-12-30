@@ -101,11 +101,13 @@ aoc_day() {
 ### year: create scaffolding for new year
 sub_year() {
   aoc_checks
-  mkdir $1
+  mkdir -p $1
   cd $1
   for DAY in ${DAYS[@]}; do
-    mkdir $DAY
-    cp -n ../template/* ./$DAY/
+    if ! [ -d "$DAY" ]; then
+      mkdir $DAY
+      cp ../template/* ./$DAY/
+    fi
   done
   p_success "Created scaffolding for year $1"
 }
