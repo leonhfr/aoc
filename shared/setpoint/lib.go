@@ -60,6 +60,10 @@ func (sp *SetPoint) Points() []Point {
 	return points
 }
 
+func ManhattanDistance(p1, p2 Point) int {
+	return sh.Abs(p1.X-p2.X) + sh.Abs(p1.Y-p2.Y)
+}
+
 func (sp *SetPoint) boundaries(p Point) {
 	sp.pmin.X = sh.Min(sp.pmin.X, p.X)
 	sp.pmin.Y = sh.Min(sp.pmin.Y, p.Y)
