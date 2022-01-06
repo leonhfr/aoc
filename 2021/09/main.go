@@ -35,13 +35,13 @@ func part2() int {
 }
 
 func lowestPoints(hm mat.Matrix) (coords []mat.Coordinates) {
-	for i := 0; i < hm.M(); i++ {
-		for j := 0; j < hm.N(); j++ {
-			v := hm[i][j]
-			up := i == 0 || v < hm.Get(i-1, j)
-			down := i == hm.M()-1 || v < hm.Get(i+1, j)
-			left := j == 0 || v < hm.Get(i, j-1)
-			right := j == hm.N()-1 || v < hm.Get(i, j+1)
+	for i := 1; i <= hm.M(); i++ {
+		for j := 1; j <= hm.N(); j++ {
+			v := hm.Get(i, j)
+			up := i == 1 || v <= hm.Get(i-1, j)
+			down := i == hm.M() || v < hm.Get(i+1, j)
+			left := j == 1 || v < hm.Get(i, j-1)
+			right := j == hm.N() || v < hm.Get(i, j+1)
 			if up && down && left && right {
 				coords = append(coords, mat.Coordinates{I: i, J: j})
 			}
@@ -64,7 +64,7 @@ func getBasin(hm mat.Matrix, lp mat.Coordinates) (b basin) {
 	for len(queue) > 0 {
 		c := queue[0]
 		queue = queue[1:]
-		if hm[c.I][c.J] == 9 || b.contains(c) {
+		if hm.Get(c.I, c.J) == 9 || b.contains(c) {
 			continue
 		}
 		b = append(b, c)
@@ -77,7 +77,7 @@ func getBasin(hm mat.Matrix, lp mat.Coordinates) (b basin) {
 			{I: c.I, J: c.J + 1},
 		}
 		for _, p := range possibles {
-			if p.I >= 0 && p.I < hm.M() && p.J >= 0 && p.J < hm.N() {
+			if hm.Inside(p.I, p.J) {
 				queue = append(queue, p)
 			}
 		}

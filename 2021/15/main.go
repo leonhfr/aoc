@@ -31,17 +31,17 @@ func part2() int {
 func dijkstraMinCost(matrix mat.Matrix) int {
 	vectors := []vector{{1, 0}, {0, 1}, {-1, 0}, {0, -1}}
 	dm := newDistanceMatrix(matrix.M(), matrix.N())
-	dm.Set(0, 0, 0)
+	dm.Set(1, 1, 0)
 	h := &riskHeap{}
 	heap.Init(h)
-	heap.Push(h, risk{mat.Coordinates{I: 0, J: 0}, 0})
+	heap.Push(h, risk{mat.Coordinates{I: 1, J: 1}, 0})
 
 	for h.Len() != 0 {
 		r := heap.Pop(h).(risk)
 		for _, v := range vectors {
 			i := r.c.I + v.i
 			j := r.c.J + v.j
-			if i < 0 || j < 0 || i >= matrix.M() || j >= matrix.N() {
+			if !matrix.Inside(i, j) {
 				continue
 			}
 
@@ -53,7 +53,7 @@ func dijkstraMinCost(matrix mat.Matrix) int {
 		}
 	}
 
-	return dm.Get(dm.M()-1, dm.N()-1)
+	return dm.Get(dm.M(), dm.N())
 }
 
 func extendMatrix(matrix mat.Matrix) mat.Matrix {

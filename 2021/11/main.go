@@ -49,21 +49,17 @@ func step(m mat.Matrix) (flashes int) {
 }
 
 func increment(m mat.Matrix) {
-	for i := 0; i < m.M(); i++ {
-		for j := 0; j < m.N(); j++ {
-			m[i][j]++
-		}
+	for _, c := range m.Coordinates() {
+		m.Inc(c.I, c.J, 1)
 	}
 }
 
-func flash(m mat.Matrix) (flahes int) {
-	for i := 0; i < m.M(); i++ {
-		for j := 0; j < m.N(); j++ {
-			if m[i][j] > 9 {
-				spread(m, i, j)
-				m[i][j] = -1
-				flahes++
-			}
+func flash(m mat.Matrix) (flashes int) {
+	for _, c := range m.Coordinates() {
+		if m.Get(c.I, c.J) > 9 {
+			spread(m, c.I, c.J)
+			m.Set(c.I, c.J, -1)
+			flashes++
 		}
 	}
 	return
@@ -83,30 +79,24 @@ func spread(m mat.Matrix, i, j int) {
 
 	for _, v := range vectors {
 		vi, vj := i+v.i, j+v.j
-		if 0 <= vi && vi < m.M() && 0 <= vj && vj < m.N() {
-			if m[vi][vj] >= 0 {
-				m[vi][vj]++
-			}
+		if m.Inside(vi, vj) && m.Get(vi, vj) >= 0 {
+			m.Inc(vi, vj, 1)
 		}
 	}
 }
 
 func reset(m mat.Matrix) {
-	for i := 0; i < m.M(); i++ {
-		for j := 0; j < m.N(); j++ {
-			if m[i][j] == -1 {
-				m[i][j] = 0
-			}
+	for _, c := range m.Coordinates() {
+		if m.Get(c.I, c.J) == -1 {
+			m.Set(c.I, c.J, 0)
 		}
 	}
 }
 
 func synchronized(m mat.Matrix) bool {
-	for i := 0; i < m.M(); i++ {
-		for j := 0; j < m.N(); j++ {
-			if m[i][j] != 0 {
-				return false
-			}
+	for _, c := range m.Coordinates() {
+		if m.Get(c.I, c.J) != 0 {
+			return false
 		}
 	}
 	return true

@@ -48,19 +48,27 @@ func (m Matrix) N() int {
 	return len(m[0])
 }
 
+func (m Matrix) Inside(i, j int) bool {
+	return 1 <= i && i <= m.M() && 1 <= j && j <= m.N()
+}
+
 func (m Matrix) Get(i, j int) int {
-	return m[i][j]
+	return m[i-1][j-1]
 }
 
 func (m Matrix) Set(i, j, v int) {
-	m[i][j] = v
+	m[i-1][j-1] = v
+}
+
+func (m Matrix) Inc(i, j, v int) {
+	m[i-1][j-1] += v
 }
 
 func (m Matrix) Coordinates() []Coordinates {
 	var coords []Coordinates
 	for i := 0; i < m.M(); i++ {
 		for j := 0; j < m.N(); j++ {
-			coords = append(coords, Coordinates{i, j})
+			coords = append(coords, Coordinates{i + 1, j + 1})
 		}
 	}
 	return coords
