@@ -62,7 +62,7 @@ func (sp *SetPoint) boundaries(p Point) {
 	sp.pmin.Z = sh.Min(sp.pmin.Z, p.Z)
 	sp.pmax.X = sh.Max(sp.pmax.X, p.X)
 	sp.pmax.Y = sh.Max(sp.pmax.Y, p.Y)
-	sp.pmax.Z = sh.Min(sp.pmax.Z, p.Z)
+	sp.pmax.Z = sh.Max(sp.pmax.Z, p.Z)
 }
 
 func (set1 *SetPoint) Intersect(set2 *SetPoint) *SetPoint {
