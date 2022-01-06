@@ -48,6 +48,10 @@ func (sp *SetPoint) Boundaries() (Point, Point) {
 	return sp.pmin, sp.pmax
 }
 
+func (sp *SetPoint) Inside(p Point) bool {
+	return sp.pmin.X <= p.X && p.X <= sp.pmax.X && sp.pmin.Y <= p.Y && p.Y <= sp.pmax.Y
+}
+
 func (sp *SetPoint) Points() []Point {
 	var points []Point
 	for p := range sp.points {
