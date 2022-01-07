@@ -13,6 +13,13 @@ type Coordinates struct {
 	I, J int
 }
 
+type Direction int
+
+const (
+	Clockwise Direction = iota
+	CounterClockwise
+)
+
 func NewMatrix(m, n int) Matrix {
 	matrix := make(Matrix, m)
 	for i := 0; i < n; i++ {
@@ -24,18 +31,33 @@ func NewMatrix(m, n int) Matrix {
 func IntMatrix(str string) Matrix {
 	lines := sh.Lines(str)
 	matrix := NewMatrix(len(lines), len(lines[0]))
-	for y, line := range lines {
-		matrix[y] = sh.ToInts(strings.Split(line, ""))
+	for i, line := range lines {
+		matrix[i] = sh.ToInts(strings.Split(line, ""))
+	}
+	return matrix
+}
+
+func SharpMatrix(str string) Matrix {
+	lines := sh.Lines(str)
+	matrix := NewMatrix(len(lines), len(lines[0]))
+	for i, line := range lines {
+		for j, r := range line {
+			if r == '#' {
+				matrix.Set(i+1, j+1, 1)
+			} else {
+				matrix.Set(i+1, j+1, 0)
+			}
+		}
 	}
 	return matrix
 }
 
 func (m Matrix) Duplicate() Matrix {
 	matrix := NewMatrix(m.M(), m.N())
-	for y := range m {
+	for i := range m {
 		row := make([]int, m.N())
-		copy(row, m[y])
-		matrix[y] = row
+		copy(row, m[i])
+		matrix[i] = row
 	}
 	return matrix
 }
@@ -62,6 +84,62 @@ func (m Matrix) Set(i, j, v int) {
 
 func (m Matrix) Inc(i, j, v int) {
 	m[i-1][j-1] += v
+}
+
+func (m Matrix) Row(i int) []int {
+	row := make([]int, m.N())
+	copy(row, m[i-1])
+	return row
+}
+
+func (m Matrix) Col(j int) []int {
+	col := make([]int, m.M())
+	for i, row := range m {
+		col[i] = row[j-1]
+	}
+	return col
+}
+
+func (m Matrix) Swap(i1, j1, i2, j2 int) {
+	m[i1-1][j1-1], m[i2-1][j2-1] = m[i2-1][j2-1], m[i1-1][j1-1]
+}
+
+func (m Matrix) Transpose() {
+	if m.M() != m.N() {
+		panic("Not a square matrix.")
+	}
+
+	for i := 1; i <= m.M(); i++ {
+		for j := i; j <= m.N(); j++ {
+			m.Swap(i, j, j, i)
+		}
+	}
+}
+
+func (m Matrix) Rotate(d Direction) {
+	m.Transpose()
+	switch d {
+	case Clockwise:
+		m.VerticalFlip()
+	case CounterClockwise:
+		m.HorizontalFlip()
+	}
+}
+
+func (m Matrix) HorizontalFlip() {
+	for i := 1; i <= m.M()/2; i++ {
+		for j := 1; j <= m.N(); j++ {
+			m.Swap(i, j, m.M()+1-i, j)
+		}
+	}
+}
+
+func (m Matrix) VerticalFlip() {
+	for i := 1; i <= m.M(); i++ {
+		for j := 1; j <= m.N()/2; j++ {
+			m.Swap(i, j, i, m.N()+1-j)
+		}
+	}
 }
 
 func (m Matrix) Coordinates() []Coordinates {
