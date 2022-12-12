@@ -30,7 +30,7 @@ func part2() int {
 
 func dijkstraMinCost(matrix mat.Matrix) int {
 	vectors := []vector{{1, 0}, {0, 1}, {-1, 0}, {0, -1}}
-	dm := newDistanceMatrix(matrix.M(), matrix.N())
+	dm := mat.NewMatrixWithDefault(matrix.M(), matrix.N(), math.MaxInt)
 	dm.Set(1, 1, 0)
 	h := &riskHeap{}
 	heap.Init(h)
@@ -70,14 +70,6 @@ func extendMatrix(matrix mat.Matrix) mat.Matrix {
 		}
 	}
 	return extended
-}
-
-func newDistanceMatrix(m, n int) mat.Matrix {
-	dm := mat.NewMatrix(m, n)
-	for _, c := range dm.Coordinates() {
-		dm.Set(c.I, c.J, math.MaxInt)
-	}
-	return dm
 }
 
 type vector struct {

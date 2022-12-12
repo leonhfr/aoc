@@ -43,7 +43,6 @@ func part1() int {
 func part2() int {
 	list := dirList(lines)
 	sum := list[len(list)-1].size
-	fmt.Println(sum)
 	min := sum
 	for _, dir := range list {
 		if sum-dir.size <= TARGET && dir.size < min {

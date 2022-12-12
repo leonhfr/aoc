@@ -22,8 +22,19 @@ const (
 
 func NewMatrix(m, n int) Matrix {
 	matrix := make(Matrix, m)
-	for i := 0; i < n; i++ {
+	for i := 0; i < m; i++ {
 		matrix[i] = make([]int, n)
+	}
+	return matrix
+}
+
+func NewMatrixWithDefault(m, n, v int) Matrix {
+	matrix := make(Matrix, m)
+	for i := 0; i < m; i++ {
+		matrix[i] = make([]int, n)
+		for j := 0; j < n; j++ {
+			matrix[i][j] = v
+		}
 	}
 	return matrix
 }
