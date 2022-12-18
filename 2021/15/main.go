@@ -83,11 +83,11 @@ type risk struct {
 
 type riskHeap []risk
 
-func (rh riskHeap) Len() int            { return len(rh) }
-func (rh riskHeap) Swap(i, j int)       { rh[i], rh[j] = rh[j], rh[i] }
-func (rh riskHeap) Less(i, j int) bool  { return rh[i].level < rh[j].level }
-func (rh *riskHeap) Push(x interface{}) { *rh = append(*rh, x.(risk)) }
-func (rh *riskHeap) Pop() interface{} {
+func (rh riskHeap) Len() int           { return len(rh) }
+func (rh riskHeap) Swap(i, j int)      { rh[i], rh[j] = rh[j], rh[i] }
+func (rh riskHeap) Less(i, j int) bool { return rh[i].level < rh[j].level }
+func (rh *riskHeap) Push(x any)        { *rh = append(*rh, x.(risk)) }
+func (rh *riskHeap) Pop() any {
 	tmp, n := *rh, len(*rh)
 	x := tmp[n-1]
 	*rh = tmp[0 : n-1]

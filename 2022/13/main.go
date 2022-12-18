@@ -31,8 +31,8 @@ func part1() int {
 func part2() int {
 	packages := getPackages(input)
 	packages = append(packages,
-		[]interface{}{[]interface{}{2.}},
-		[]interface{}{[]interface{}{6.}},
+		[]any{[]any{2.}},
+		[]any{[]any{6.}},
 	)
 
 	sort.Slice(packages,
@@ -48,17 +48,17 @@ func part2() int {
 	return result
 }
 
-func compare(a, b interface{}) int {
-	as, aok := a.([]interface{})
-	bs, bok := b.([]interface{})
+func compare(a, b any) int {
+	as, aok := a.([]any)
+	bs, bok := b.([]any)
 
 	switch {
 	case !aok && !bok:
 		return int(a.(float64) - b.(float64))
 	case !aok:
-		as = []interface{}{a}
+		as = []any{a}
 	case !bok:
-		bs = []interface{}{b}
+		bs = []any{b}
 	}
 
 	for i := 0; i < len(as) && i < len(bs); i++ {
@@ -70,48 +70,14 @@ func compare(a, b interface{}) int {
 	return len(as) - len(bs)
 }
 
-func getPackages(input string) []interface{} {
-	var packages []interface{}
+func getPackages(input string) []any {
+	var packages []any
 	for _, line := range sh.Lines(input) {
 		if len(line) > 0 {
-			var x interface{}
+			var x any
 			json.Unmarshal([]byte(line), &x)
 			packages = append(packages, x)
 		}
 	}
 	return packages
 }
-
-// func init() {
-// 	for _, p := range strings.Split(input, "\n\n") {
-// 		values := strings.Split(p, "\n")
-// 		var left, right interface{}
-// 		json.Unmarshal([]byte(values[0]), &left)
-// 		json.Unmarshal([]byte(values[1]), &right)
-// 		pairs = append(pairs, pair{left, right})
-// 	}
-// }
-
-var test = `[1,1,3,1,1]
-[1,1,5,1,1]
-
-[[1],[2,3,4]]
-[[1],4]
-
-[9]
-[[8,7,6]]
-
-[[4,4],4,4]
-[[4,4],4,4,4]
-
-[7,7,7,7]
-[7,7,7]
-
-[]
-[3]
-
-[[[]]]
-[[]]
-
-[1,[2,[3,[4,[5,6,7]]]],8,9]
-[1,[2,[3,[4,[5,6,0]]]],8,9]`

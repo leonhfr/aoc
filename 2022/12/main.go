@@ -51,11 +51,11 @@ type (
 	levelHeap []level
 )
 
-func (h levelHeap) Len() int            { return len(h) }
-func (h levelHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
-func (h levelHeap) Less(i, j int) bool  { return h[i].level > h[j].level }
-func (h *levelHeap) Push(x interface{}) { *h = append(*h, x.(level)) }
-func (h *levelHeap) Pop() interface{} {
+func (h levelHeap) Len() int           { return len(h) }
+func (h levelHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h levelHeap) Less(i, j int) bool { return h[i].level > h[j].level }
+func (h *levelHeap) Push(x any)        { *h = append(*h, x.(level)) }
+func (h *levelHeap) Pop() any {
 	tmp, n := *h, len(*h)
 	x := tmp[n-1]
 	*h = tmp[0 : n-1]

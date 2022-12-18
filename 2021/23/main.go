@@ -62,11 +62,11 @@ func solve(state b.State) int {
 
 type stateHeap []b.State
 
-func (sh stateHeap) Len() int            { return len(sh) }
-func (sh stateHeap) Less(i, j int) bool  { return sh[i].Energy < sh[j].Energy }
-func (sh stateHeap) Swap(i, j int)       { sh[i], sh[j] = sh[j], sh[i] }
-func (sh *stateHeap) Push(x interface{}) { *sh = append(*sh, x.(b.State)) }
-func (sh *stateHeap) Pop() interface{} {
+func (sh stateHeap) Len() int           { return len(sh) }
+func (sh stateHeap) Less(i, j int) bool { return sh[i].Energy < sh[j].Energy }
+func (sh stateHeap) Swap(i, j int)      { sh[i], sh[j] = sh[j], sh[i] }
+func (sh *stateHeap) Push(x any)        { *sh = append(*sh, x.(b.State)) }
+func (sh *stateHeap) Pop() any {
 	tmp, n := *sh, len(*sh)
 	x := tmp[n-1]
 	*sh = tmp[:n-1]
