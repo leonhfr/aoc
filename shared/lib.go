@@ -106,3 +106,12 @@ func ReverseStr(s string) string {
 	}
 	return string(r)
 }
+
+// integer b^n
+func Pow(b, n int) int {
+	r := 1
+	for i := 0; i < n; i++ {
+		r *= b
+	}
+	return r
+}
