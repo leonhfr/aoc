@@ -13,7 +13,7 @@ func TestPart1(t *testing.T) {
 }
 
 func TestPart2(t *testing.T) {
-	want := 0
+	want := 3403989691757
 	if got := part2(); got != want {
 		t.Errorf("Part 2: got %v, want %v", got, want)
 	}
