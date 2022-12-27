@@ -11,6 +11,10 @@ type Point struct {
 	X, Y int
 }
 
+func (p Point) Add(v Point) Point {
+	return Point{p.X + v.X, p.Y + v.Y}
+}
+
 type SetPoint struct {
 	points     map[Point]struct{}
 	pmin, pmax Point
